@@ -118,23 +118,23 @@ function findGuest(searchName) {
     const normalizedSearch = searchName.toLowerCase().trim();
     
     // First try exact match
-    for (const [guestName, tableNumber] of Object.entries(guestData)) {
+    for (const [guestName, guestInfo] of Object.entries(guestData)) {
         if (guestName.toLowerCase() === normalizedSearch) {
-            return { name: guestName, table: tableNumber };
+            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
         }
     }
     
     // Then try partial match
-    for (const [guestName, tableNumber] of Object.entries(guestData)) {
+    for (const [guestName, guestInfo] of Object.entries(guestData)) {
         if (guestName.toLowerCase().includes(normalizedSearch) || 
             normalizedSearch.includes(guestName.toLowerCase())) {
-            return { name: guestName, table: tableNumber };
+            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
         }
     }
     
     // Try matching individual words
     const searchWords = normalizedSearch.split(' ');
-    for (const [guestName, tableNumber] of Object.entries(guestData)) {
+    for (const [guestName, guestInfo] of Object.entries(guestData)) {
         const nameWords = guestName.toLowerCase().split(' ');
         const hasMatch = searchWords.some(searchWord => 
             nameWords.some(nameWord => 
@@ -142,7 +142,7 @@ function findGuest(searchName) {
             )
         );
         if (hasMatch && searchWords.length > 0 && searchWords[0].length > 2) {
-            return { name: guestName, table: tableNumber };
+            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
         }
     }
     
@@ -445,7 +445,7 @@ function showAutocomplete(searchValue) {
         item.className = 'autocomplete-item';
         item.innerHTML = `
             <span class="guest-name">${suggestion.name}</span>
-            <span class="table-info">Bàn ${suggestion.table}</span>
+            <span class="table-info">${suggestion.description}</span>
         `;
         
         // Add click handler
@@ -474,23 +474,33 @@ function getMatchingSuggestions(searchValue) {
     const guestEntries = Object.entries(guestData);
     
     // Exact matches first
-    guestEntries.forEach(([name, table]) => {
+    guestEntries.forEach(([name, guestInfo]) => {
         if (name.toLowerCase().startsWith(normalizedSearch)) {
-            matches.push({ name, table, priority: 1 });
+            matches.push({ 
+                name, 
+                table: guestInfo.table, 
+                description: guestInfo.description, 
+                priority: 1 
+            });
         }
     });
     
     // Partial matches
-    guestEntries.forEach(([name, table]) => {
+    guestEntries.forEach(([name, guestInfo]) => {
         const lowerName = name.toLowerCase();
         if (lowerName.includes(normalizedSearch) && !lowerName.startsWith(normalizedSearch)) {
-            matches.push({ name, table, priority: 2 });
+            matches.push({ 
+                name, 
+                table: guestInfo.table, 
+                description: guestInfo.description, 
+                priority: 2 
+            });
         }
     });
     
     // Word matches
     const searchWords = normalizedSearch.split(' ');
-    guestEntries.forEach(([name, table]) => {
+    guestEntries.forEach(([name, guestInfo]) => {
         const nameWords = name.toLowerCase().split(' ');
         const hasWordMatch = searchWords.some(searchWord => 
             nameWords.some(nameWord => 
@@ -499,7 +509,12 @@ function getMatchingSuggestions(searchValue) {
         );
         
         if (hasWordMatch && !matches.some(m => m.name === name)) {
-            matches.push({ name, table, priority: 3 });
+            matches.push({ 
+                name, 
+                table: guestInfo.table, 
+                description: guestInfo.description, 
+                priority: 3 
+            });
         }
     });
     
