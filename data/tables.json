@@ -1,121 +1,121 @@
 {
   "tables": [
     {
-      "number": "Table 1",
+      "number": "1",
       "x": 150,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 2",
+      "number": "2",
       "x": 250,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 3",
+      "number": "3",
       "x": 350,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 4",
+      "number": "4",
       "x": 450,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 5",
+      "number": "5",
       "x": 550,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 6",
+      "number": "6",
       "x": 650,
       "y": 200,
       "radius": 30
     },
     {
-      "number": "Table 7",
+      "number": "7",
       "x": 100,
       "y": 280,
       "radius": 30
     },
     {
-      "number": "Table 8",
+      "number": "8",
       "x": 200,
       "y": 280,
       "radius": 30
     },
     {
-      "number": "Table 9",
+      "number": "9",
       "x": 600,
       "y": 280,
       "radius": 30
     },
     {
-      "number": "Table 10",
+      "number": "10",
       "x": 700,
       "y": 280,
       "radius": 30
     },
     {
-      "number": "Table 11",
+      "number": "11",
       "x": 100,
       "y": 420,
       "radius": 30
     },
     {
-      "number": "Table 12",
+      "number": "12",
       "x": 200,
       "y": 420,
       "radius": 30
     },
     {
-      "number": "Table 13",
+      "number": "13",
       "x": 600,
       "y": 420,
       "radius": 30
     },
     {
-      "number": "Table 14",
+      "number": "14",
       "x": 700,
       "y": 420,
       "radius": 30
     },
     {
-      "number": "Table 15",
+      "number": "15",
       "x": 150,
       "y": 500,
       "radius": 30
     },
     {
-      "number": "Table 16",
+      "number": "16",
       "x": 250,
       "y": 500,
       "radius": 30
     },
     {
-      "number": "Table 17",
+      "number": "17",
       "x": 350,
       "y": 500,
       "radius": 30
     },
     {
-      "number": "Table 18",
+      "number": "18",
       "x": 450,
       "y": 500,
       "radius": 30
     },
     {
-      "number": "Table 19",
+      "number": "19",
       "x": 550,
       "y": 500,
       "radius": 30
     },
     {
-      "number": "Table 20",
+      "number": "20",
       "x": 650,
       "y": 500,
       "radius": 30

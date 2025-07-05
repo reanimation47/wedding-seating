@@ -26,11 +26,11 @@ async function loadData() {
         // Generate floor plan
         generateFloorPlan();
         
-        console.log('Data loaded successfully');
+        console.log('Dữ liệu đã được tải thành công');
     } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('Lỗi khi tải dữ liệu:', error);
         // Show error message to user
-        showError('Unable to load guest data. Please refresh the page and try again.');
+        showError('Không thể tải dữ liệu khách mời. Vui lòng làm mới trang và thử lại.');
     }
 }
 
@@ -86,14 +86,14 @@ function searchGuest() {
     const guestName = document.getElementById('guestName').value.trim();
     
     if (!guestName) {
-        alert('Please enter a name to search.');
+        alert('Vui lòng nhập tên để tìm kiếm.');
         return;
     }
     
     // Show loading state
     const searchBtn = document.getElementById('searchBtn');
     const originalText = searchBtn.textContent;
-    searchBtn.innerHTML = '<span class="loading"></span> Searching...';
+    searchBtn.innerHTML = '<span class="loading"></span> Đang tìm...';
     searchBtn.disabled = true;
     
     // Simulate search delay for better UX
@@ -155,7 +155,7 @@ function showFloorPlan(guest) {
     const guestInfo = document.getElementById('guestInfo');
     guestInfo.innerHTML = `
         <h3>${guest.name}</h3>
-        <p>You are seated at <strong>${guest.table}</strong></p>
+        <p>Quý khách ngồi tại <strong>Bàn ${guest.table}</strong></p>
     `;
     
     // Hide search section and show floor plan
@@ -211,7 +211,7 @@ function addFloorPlanBackground(svg) {
     stageLabel.setAttribute('font-size', '16');
     stageLabel.setAttribute('font-weight', '600');
     stageLabel.setAttribute('fill', '#2D5016');
-    stageLabel.textContent = 'Head Table / Stage';
+    stageLabel.textContent = 'Bàn Chính / Sân Khấu';
     svg.appendChild(stageLabel);
     
     // Add dance floor
@@ -233,7 +233,7 @@ function addFloorPlanBackground(svg) {
     danceLabel.setAttribute('font-family', 'Inter, sans-serif');
     danceLabel.setAttribute('font-size', '14');
     danceLabel.setAttribute('fill', '#6C757D');
-    danceLabel.textContent = 'Dance Floor';
+    danceLabel.textContent = 'Sàn Nhảy';
     svg.appendChild(danceLabel);
 }
 
@@ -313,12 +313,12 @@ function updateCheckInStatus(guest) {
         const data = JSON.parse(checkInData);
         const checkInTime = new Date(data.timestamp).toLocaleString();
         
-        checkInBtn.textContent = 'Already Checked In';
+        checkInBtn.textContent = 'Đã Check In';
         checkInBtn.disabled = true;
         
         checkInStatus.innerHTML = `
             <div class="already-checked">
-                ✓ You checked in on ${checkInTime}
+                ✓ Quý khách đã check in vào ${checkInTime}
             </div>
         `;
         checkInStatus.className = 'check-in-status already-checked';
@@ -406,7 +406,7 @@ function clearAllCheckIns() {
         }
     }
     keys.forEach(key => localStorage.removeItem(key));
-    console.log('All check-ins cleared');
+    console.log('Đã xóa tất cả check-ins');
 }
 
 // Autocomplete functionality
@@ -445,7 +445,7 @@ function showAutocomplete(searchValue) {
         item.className = 'autocomplete-item';
         item.innerHTML = `
             <span class="guest-name">${suggestion.name}</span>
-            <span class="table-info">${suggestion.table}</span>
+            <span class="table-info">Bàn ${suggestion.table}</span>
         `;
         
         // Add click handler
