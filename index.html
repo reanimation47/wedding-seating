@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Seating - Find Your Table</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Welcome to Our Wedding</h1>
+            <p>Find your table and check in</p>
+        </header>
+
+        <div class="search-section" id="searchSection">
+            <div class="search-card">
+                <h2>Find Your Table</h2>
+                <div class="search-form">
+                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            id="guestName" 
+                            placeholder="Enter your name..."
+                            autocomplete="off"
+                        >
+                        <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+                    </div>
+                    <button id="searchBtn" onclick="searchGuest()">Find Table</button>
+                </div>
+                <div id="searchResult" class="search-result"></div>
+            </div>
+        </div>
+
+        <div class="floor-plan-section" id="floorPlanSection" style="display: none;">
+            <div class="floor-plan-card">
+                <h2>Your Table Location</h2>
+                <div class="guest-info" id="guestInfo"></div>
+                <div class="floor-plan-container">
+                    <svg id="floorPlan" viewBox="0 0 800 600" class="floor-plan">
+                        <!-- Tables will be dynamically generated here -->
+                    </svg>
+                </div>
+                <div class="action-buttons">
+                    <button id="checkInBtn" onclick="checkIn()" class="check-in-btn">Check In</button>
+                    <button onclick="goBack()" class="back-btn">Search Again</button>
+                </div>
+                <div id="checkInStatus" class="check-in-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Guest Not Found</h3>
+            <p>We couldn't find your name in our guest list. Please check the spelling or contact the wedding party for assistance.</p>
+            <button onclick="closeModal()" class="modal-btn">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSuccessModal()">&times;</span>
+            <h3>Successfully Checked In!</h3>
+            <p>Thank you for checking in. We look forward to celebrating with you!</p>
+            <button onclick="closeSuccessModal()" class="modal-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

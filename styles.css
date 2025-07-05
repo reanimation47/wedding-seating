@@ -1,0 +1,527 @@
+/* Import elegant fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* CSS Variables for consistent theming */
+:root {
+    --primary-green: #2D5016;
+    --light-green: #E8F5E8;
+    --accent-green: #4A7C59;
+    --white: #FFFFFF;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --border-light: #E0E0E0;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, var(--light-green) 0%, var(--white) 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header styles */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+}
+
+.header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-weight: 300;
+}
+
+/* Card styles */
+.search-card, .floor-plan-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 40px;
+    margin: 0 auto;
+    max-width: 600px;
+    transition: var(--transition);
+}
+
+.floor-plan-card {
+    max-width: 900px;
+}
+
+.search-card:hover, .floor-plan-card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.search-card h2, .floor-plan-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--primary-green);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Search form styles */
+.search-form {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-input-container {
+    flex: 1;
+    position: relative;
+}
+
+#guestName {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    transition: var(--transition);
+    background: var(--white);
+}
+
+#guestName:focus {
+    outline: none;
+    border-color: var(--accent-green);
+    box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+/* Autocomplete dropdown styles */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 2px solid var(--accent-green);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: var(--shadow-hover);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+    animation: dropdownSlideIn 0.2s ease;
+}
+
+@keyframes dropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.autocomplete-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.highlighted {
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+.autocomplete-item.highlighted {
+    font-weight: 600;
+}
+
+.autocomplete-item .guest-name {
+    font-weight: 500;
+}
+
+.autocomplete-item .table-info {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-left: 10px;
+}
+
+.autocomplete-item.highlighted .table-info {
+    color: var(--accent-green);
+}
+
+#searchBtn {
+    padding: 15px 30px;
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+#searchBtn:hover {
+    background: var(--accent-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+#searchBtn:active {
+    transform: translateY(0);
+}
+
+/* Guest info styles */
+.guest-info {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--light-green);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-green);
+}
+
+.guest-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--primary-green);
+    margin-bottom: 5px;
+}
+
+.guest-info p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+/* Floor plan styles */
+.floor-plan-container {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.floor-plan {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius);
+    background: var(--white);
+}
+
+.table {
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.table circle {
+    fill: var(--light-green);
+    stroke: var(--accent-green);
+    stroke-width: 2;
+}
+
+.table.highlighted circle {
+    fill: var(--primary-green);
+    stroke: var(--primary-green);
+    stroke-width: 3;
+    animation: pulse 2s infinite;
+}
+
+.table text {
+    fill: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.table.highlighted text {
+    fill: var(--white);
+    font-weight: 700;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.check-in-btn, .back-btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.check-in-btn {
+    background: var(--primary-green);
+    color: var(--white);
+}
+
+.check-in-btn:hover {
+    background: var(--accent-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.check-in-btn:disabled {
+    background: var(--text-light);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.back-btn {
+    background: var(--white);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+}
+
+.back-btn:hover {
+    background: var(--primary-green);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Check-in status */
+.check-in-status {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+}
+
+.check-in-status.success {
+    background: var(--light-green);
+    color: var(--primary-green);
+    border: 2px solid var(--accent-green);
+}
+
+.check-in-status.already-checked {
+    background: #FFF3CD;
+    color: #856404;
+    border: 2px solid #FFEAA7;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--white);
+    margin: 15% auto;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: var(--shadow-hover);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--primary-green);
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.close {
+    color: var(--text-light);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.close:hover {
+    color: var(--primary-green);
+}
+
+.modal-btn {
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    padding: 15px 30px;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-btn:hover {
+    background: var(--accent-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .header p {
+        font-size: 1.1rem;
+    }
+    
+    .search-card, .floor-plan-card {
+        padding: 25px;
+        margin: 0 10px;
+    }
+    
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .check-in-btn, .back-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .modal-content {
+        margin: 20% auto;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 20px 10px;
+        margin-bottom: 20px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .search-card h2, .floor-plan-card h2 {
+        font-size: 1.5rem;
+    }
+    
+    .floor-plan {
+        border-radius: 8px;
+    }
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--light-green);
+    border-radius: 50%;
+    border-top-color: var(--primary-green);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Utility classes */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
