@@ -7,7 +7,7 @@ let selectedSuggestionIndex = -1;
 let suggestions = [];
 
 // Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw142CwY3KTsu3ii8SABglwCtR7wJ3kdXCB6x0y5L9OCBAZpb2tR1fCO8kw9wn0Hm1d/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9AuGCcuGaaxDwBWO0t-GAsV5PWn12WW_L4TZMtvn8LOVdGMDbVnC2_Qvm8ODQjDV3/exec';
 
 // JSONP helper function to bypass CORS
 function makeJSONPRequest(url, params) {
@@ -228,13 +228,8 @@ function showFloorPlan(guest) {
     // Show immediate loading states
     showInitialLoadingStates(guest);
     
-    // Start parallel loading of check-in status and table status
-    Promise.all([
-        updateCheckInStatus(guest),
-        showTableStatus(guest.table)
-    ]).catch(error => {
-        console.error('Error during parallel loading:', error);
-    });
+    // Load both check-in status and table status with a single API call
+    loadGuestAndTableStatus(guest);
     
     // Scroll to floor plan
     document.getElementById('floorPlanSection').scrollIntoView({ 
@@ -432,8 +427,8 @@ async function checkIn() {
             };
             localStorage.setItem(`checkedIn_${currentGuest.id}`, JSON.stringify(checkInData));
             
-            // Update UI
-            await updateCheckInStatus(currentGuest);
+            // Reload guest and table status to show updated information
+            await loadGuestAndTableStatus(currentGuest);
             
             // Show success modal
             showSuccessModal();
@@ -453,8 +448,8 @@ async function checkIn() {
         };
         localStorage.setItem(`checkedIn_${currentGuest.id}`, JSON.stringify(checkInData));
         
-        // Update UI
-        await updateCheckInStatus(currentGuest);
+        // Reload guest and table status to show updated information
+        await loadGuestAndTableStatus(currentGuest);
         
         // Show success modal with warning
         showSuccessModal();
@@ -465,36 +460,49 @@ async function checkIn() {
     checkInBtn.textContent = originalText;
 }
 
-// Update check-in status display with Google Sheets integration using JSONP
-async function updateCheckInStatus(guest) {
+// Combined function to load both guest check-in status and table status with single API call
+async function loadGuestAndTableStatus(guest) {
     const checkInBtn = document.getElementById('checkInBtn');
     const checkInStatus = document.getElementById('checkInStatus');
     
     try {
-        // First check Google Sheets using JSONP
+        // Single API call to get both guest status and table status
         const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
-            action: 'checkStatus',
-            guestId: guest.id
+            action: 'getGuestAndTableStatus',
+            guestId: guest.id,
+            table: guest.table
         });
         
-        if (result.success && result.isCheckedIn) {
-            checkInBtn.textContent = 'Đã Check In';
-            checkInBtn.disabled = true;
-            checkInBtn.style.opacity = '1';
+        if (result.success) {
+            // Update check-in button based on guest status
+            if (result.guestCheckedIn) {
+                checkInBtn.textContent = 'Đã Check In';
+                checkInBtn.disabled = true;
+                checkInBtn.style.opacity = '1';
+                
+                checkInStatus.innerHTML = `
+                    <div class="already-checked">
+                        ✓ Quý khách đã check in thành công
+                    </div>
+                `;
+                checkInStatus.className = 'check-in-status already-checked';
+            } else {
+                checkInBtn.textContent = 'Check In';
+                checkInBtn.disabled = false;
+                checkInBtn.style.opacity = '1';
+                checkInStatus.innerHTML = '';
+                checkInStatus.className = 'check-in-status';
+            }
             
-            checkInStatus.innerHTML = `
-                <div class="already-checked">
-                    ✓ Quý khách đã check in thành công
-                </div>
-            `;
-            checkInStatus.className = 'check-in-status already-checked';
+            // Update table status
+            updateTableStatusDisplay(result.tableCheckIns);
             return;
         }
     } catch (error) {
-        console.error('Error checking status from Google Sheets:', error);
+        console.error('Error loading guest and table status from Google Sheets:', error);
     }
     
-    // Fallback to localStorage check
+    // Fallback to localStorage and show offline status
     const checkInData = localStorage.getItem(`checkedIn_${guest.id}`);
     if (checkInData) {
         const data = JSON.parse(checkInData);
@@ -511,81 +519,24 @@ async function updateCheckInStatus(guest) {
         `;
         checkInStatus.className = 'check-in-status already-checked';
     } else {
-        // Guest not checked in - enable the button
         checkInBtn.textContent = 'Check In';
         checkInBtn.disabled = false;
         checkInBtn.style.opacity = '1';
         checkInStatus.innerHTML = '';
         checkInStatus.className = 'check-in-status';
     }
+    
+    // Show offline table status
+    updateTableStatusDisplay([], true);
 }
 
-// Show who else has checked in at the same table using JSONP
-async function showTableStatus(tableNumber) {
-    const guestInfo = document.getElementById('guestInfo');
+// Helper function to update table status display
+function updateTableStatusDisplay(checkIns, isOffline = false) {
+    let tableStatusHtml;
     
-    // Show loading indicator
-    const loadingHtml = `
-        <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6c757d;">
-            <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
-            <div style="display: flex; align-items: center; color: #666;">
-                <span class="loading" style="margin-right: 10px;"></span>
-                Đang tải danh sách khách...
-            </div>
-        </div>
-    `;
-    
-    // Add loading indicator if not already present
-    if (!guestInfo.innerHTML.includes('Tình trạng bàn:')) {
-        guestInfo.innerHTML += loadingHtml;
-    }
-    
-    try {
-        const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
-            action: 'getTableStatus',
-            table: tableNumber
-        });
-        
-        let tableStatusHtml;
-        
-        if (result.success && result.checkIns.length > 0) {
-            // Show checked-in guests
-            tableStatusHtml = `
-                <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
-                    <h4 style="margin: 0 0 10px 0; color: #2D5016;">Khách đã check-in tại bàn này:</h4>
-                    ${result.checkIns.map(checkin => `
-                        <div style="margin: 5px 0; color: #666;">
-                            ✅ ${checkin.guestName} 
-                            <small>(${new Date(checkin.timestamp).toLocaleTimeString()})</small>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        } else {
-            // Show empty state message
-            tableStatusHtml = `
-                <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
-                    <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
-                    <div style="color: #666; text-align: center; font-style: italic;">
-                        😔 Chưa có ai check-in tại bàn này
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Replace loading indicator with actual content
-        const existingContainer = document.getElementById('tableStatusContainer');
-        if (existingContainer) {
-            existingContainer.outerHTML = tableStatusHtml;
-        } else {
-            guestInfo.innerHTML += tableStatusHtml;
-        }
-        
-    } catch (error) {
-        console.error('Error getting table status:', error);
-        
-        // Show error state
-        const errorHtml = `
+    if (isOffline) {
+        // Show offline state
+        tableStatusHtml = `
             <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
                 <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
                 <div style="color: #dc3545; text-align: center; font-style: italic;">
@@ -593,13 +544,38 @@ async function showTableStatus(tableNumber) {
                 </div>
             </div>
         `;
-        
-        const existingContainer = document.getElementById('tableStatusContainer');
-        if (existingContainer) {
-            existingContainer.outerHTML = errorHtml;
-        } else {
-            guestInfo.innerHTML += errorHtml;
-        }
+    } else if (checkIns.length > 0) {
+        // Show checked-in guests
+        tableStatusHtml = `
+            <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+                <h4 style="margin: 0 0 10px 0; color: #2D5016;">Khách đã check-in tại bàn này:</h4>
+                ${checkIns.map(checkin => `
+                    <div style="margin: 5px 0; color: #666;">
+                        ✅ ${checkin.guestName} 
+                        <small>(${new Date(checkin.timestamp).toLocaleTimeString()})</small>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else {
+        // Show empty state message
+        tableStatusHtml = `
+            <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
+                <div style="color: #666; text-align: center; font-style: italic;">
+                    😔 Chưa có ai check-in tại bàn này
+                </div>
+            </div>
+        `;
+    }
+    
+    // Replace loading indicator with actual content
+    const existingContainer = document.getElementById('tableStatusContainer');
+    if (existingContainer) {
+        existingContainer.outerHTML = tableStatusHtml;
+    } else {
+        const guestInfo = document.getElementById('guestInfo');
+        guestInfo.innerHTML += tableStatusHtml;
     }
 }
 
