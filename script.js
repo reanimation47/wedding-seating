@@ -267,7 +267,7 @@ function addTableToFloorPlan(svg, table) {
 }
 
 // Global variable for highlight intensity
-let highlightIntensity = 'medium'; // Default to medium intensity
+let highlightIntensity = 'high'; // Default to medium intensity
 
 // Highlight specific table
 function highlightTable(tableNumber) {
