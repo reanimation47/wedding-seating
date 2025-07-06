@@ -225,13 +225,49 @@ function showFloorPlan(guest) {
     // Highlight the guest's table
     highlightTable(guest.table);
     
-    // Check if already checked in
-    updateCheckInStatus(guest);
+    // Show immediate loading states
+    showInitialLoadingStates(guest);
+    
+    // Start parallel loading of check-in status and table status
+    Promise.all([
+        updateCheckInStatus(guest),
+        showTableStatus(guest.table)
+    ]).catch(error => {
+        console.error('Error during parallel loading:', error);
+    });
     
     // Scroll to floor plan
     document.getElementById('floorPlanSection').scrollIntoView({ 
         behavior: 'smooth' 
     });
+}
+
+// Show initial loading states immediately when table page loads
+function showInitialLoadingStates(guest) {
+    // Set check-in button to loading state
+    const checkInBtn = document.getElementById('checkInBtn');
+    const checkInStatus = document.getElementById('checkInStatus');
+    
+    checkInBtn.textContent = 'Vui lòng đợi...';
+    checkInBtn.disabled = true;
+    checkInBtn.style.opacity = '0.6';
+    
+    checkInStatus.innerHTML = '';
+    checkInStatus.className = 'check-in-status';
+    
+    // Show table status loading indicator immediately
+    const guestInfo = document.getElementById('guestInfo');
+    const loadingHtml = `
+        <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6c757d;">
+            <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
+            <div style="display: flex; align-items: center; color: #666;">
+                <span class="loading" style="margin-right: 10px;"></span>
+                Đang tải danh sách khách...
+            </div>
+        </div>
+    `;
+    
+    guestInfo.innerHTML += loadingHtml;
 }
 
 // Generate SVG floor plan
@@ -444,9 +480,7 @@ async function updateCheckInStatus(guest) {
         if (result.success && result.isCheckedIn) {
             checkInBtn.textContent = 'Đã Check In';
             checkInBtn.disabled = true;
-            
-            // Get table status to show other checked-in guests
-            await showTableStatus(guest.table);
+            checkInBtn.style.opacity = '1';
             
             checkInStatus.innerHTML = `
                 <div class="already-checked">
@@ -468,6 +502,7 @@ async function updateCheckInStatus(guest) {
         
         checkInBtn.textContent = 'Đã Check In';
         checkInBtn.disabled = true;
+        checkInBtn.style.opacity = '1';
         
         checkInStatus.innerHTML = `
             <div class="already-checked">
@@ -476,13 +511,12 @@ async function updateCheckInStatus(guest) {
         `;
         checkInStatus.className = 'check-in-status already-checked';
     } else {
+        // Guest not checked in - enable the button
         checkInBtn.textContent = 'Check In';
         checkInBtn.disabled = false;
+        checkInBtn.style.opacity = '1';
         checkInStatus.innerHTML = '';
         checkInStatus.className = 'check-in-status';
-        
-        // Show table status for current table
-        await showTableStatus(guest.table);
     }
 }
 
