@@ -7,7 +7,7 @@ let selectedSuggestionIndex = -1;
 let suggestions = [];
 
 // Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx90rk9-QnLWv6gBUO3VOT7sK9LO5oSp_K2-PZ2qlUqdZf91Wt5EEiHHU352ojZGNvV/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy1_UbVLMSPiWGbpXlrr-t5J3yZCTMAQH8ota7V1hSFwWEW1eU2-jUajEkUTrarrXv/exec';
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
