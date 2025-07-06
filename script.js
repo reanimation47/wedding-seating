@@ -266,18 +266,42 @@ function addTableToFloorPlan(svg, table) {
     });
 }
 
+// Global variable for highlight intensity
+let highlightIntensity = 'medium'; // Default to medium intensity
+
 // Highlight specific table
 function highlightTable(tableNumber) {
     // Remove existing highlights
     document.querySelectorAll('.table').forEach(table => {
-        table.classList.remove('highlighted');
+        table.classList.remove('highlighted', 'intensity-low', 'intensity-medium', 'intensity-high');
     });
     
     // Add highlight to target table
     const targetTable = document.querySelector(`[data-table="${tableNumber}"]`);
     if (targetTable) {
-        targetTable.classList.add('highlighted');
+        targetTable.classList.add('highlighted', `intensity-${highlightIntensity}`);
     }
+}
+
+// Function to set table highlight intensity
+function setTableHighlightIntensity(intensity) {
+    if (!['low', 'medium', 'high'].includes(intensity)) {
+        console.warn('Invalid intensity level. Use "low", "medium", or "high".');
+        return;
+    }
+    
+    highlightIntensity = intensity;
+    
+    // Update currently highlighted table if any
+    const currentHighlighted = document.querySelector('.table.highlighted');
+    if (currentHighlighted) {
+        // Remove old intensity classes
+        currentHighlighted.classList.remove('intensity-low', 'intensity-medium', 'intensity-high');
+        // Add new intensity class
+        currentHighlighted.classList.add(`intensity-${intensity}`);
+    }
+    
+    console.log(`Table highlight intensity set to: ${intensity}`);
 }
 
 // Check in functionality
@@ -349,9 +373,9 @@ function goBack() {
     document.getElementById('guestName').value = '';
     document.getElementById('guestName').focus();
     
-    // Remove table highlights
+    // Remove table highlights and intensity classes
     document.querySelectorAll('.table').forEach(table => {
-        table.classList.remove('highlighted');
+        table.classList.remove('highlighted', 'intensity-low', 'intensity-medium', 'intensity-high');
     });
     
     // Reset current guest
@@ -583,6 +607,7 @@ function selectSuggestion(index) {
     }
 }
 
-// Make debug functions available globally for testing
+// Make debug functions and intensity control available globally for testing
 window.getCheckedInGuests = getCheckedInGuests;
 window.clearAllCheckIns = clearAllCheckIns;
+window.setTableHighlightIntensity = setTableHighlightIntensity;
