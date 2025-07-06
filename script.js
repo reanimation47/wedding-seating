@@ -7,7 +7,49 @@ let selectedSuggestionIndex = -1;
 let suggestions = [];
 
 // Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy1_UbVLMSPiWGbpXlrr-t5J3yZCTMAQH8ota7V1hSFwWEW1eU2-jUajEkUTrarrXv/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw142CwY3KTsu3ii8SABglwCtR7wJ3kdXCB6x0y5L9OCBAZpb2tR1fCO8kw9wn0Hm1d/exec';
+
+// JSONP helper function to bypass CORS
+function makeJSONPRequest(url, params) {
+    return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        
+        // Create callback function
+        window[callbackName] = function(data) {
+            delete window[callbackName];
+            document.body.removeChild(script);
+            resolve(data);
+        };
+        
+        // Build URL with parameters
+        const paramString = Object.keys(params)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+            .join('&');
+        
+        const fullUrl = `${url}?callback=${callbackName}&${paramString}`;
+        
+        // Create script tag
+        const script = document.createElement('script');
+        script.src = fullUrl;
+        script.onerror = function() {
+            delete window[callbackName];
+            document.body.removeChild(script);
+            reject(new Error('JSONP request failed'));
+        };
+        
+        // Add script to page
+        document.body.appendChild(script);
+        
+        // Timeout after 10 seconds
+        setTimeout(() => {
+            if (window[callbackName]) {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                reject(new Error('JSONP request timeout'));
+            }
+        }, 10000);
+    });
+}
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -322,7 +364,7 @@ function setTableHighlightIntensity(intensity) {
     console.log(`Table highlight intensity set to: ${intensity}`);
 }
 
-// Check in functionality with Google Sheets integration
+// Check in functionality with Google Sheets integration using JSONP
 async function checkIn() {
     if (!currentGuest) return;
     
@@ -334,22 +376,14 @@ async function checkIn() {
     checkInBtn.disabled = true;
     
     try {
-        // Send check-in data to Google Sheets
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'checkin',
-                guestId: currentGuest.id,
-                guestName: currentGuest.name,
-                table: currentGuest.table,
-                deviceId: getDeviceId()
-            })
+        // Send check-in data to Google Sheets using JSONP
+        const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
+            action: 'checkin',
+            guestId: currentGuest.id,
+            guestName: currentGuest.name,
+            table: currentGuest.table,
+            deviceId: getDeviceId()
         });
-        
-        const result = await response.json();
         
         if (result.success) {
             // Also store in localStorage as backup
@@ -395,25 +429,17 @@ async function checkIn() {
     checkInBtn.textContent = originalText;
 }
 
-// Update check-in status display with Google Sheets integration
+// Update check-in status display with Google Sheets integration using JSONP
 async function updateCheckInStatus(guest) {
     const checkInBtn = document.getElementById('checkInBtn');
     const checkInStatus = document.getElementById('checkInStatus');
     
     try {
-        // First check Google Sheets
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'checkStatus',
-                guestId: guest.id
-            })
+        // First check Google Sheets using JSONP
+        const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
+            action: 'checkStatus',
+            guestId: guest.id
         });
-        
-        const result = await response.json();
         
         if (result.success && result.isCheckedIn) {
             checkInBtn.textContent = 'Đã Check In';
@@ -460,21 +486,13 @@ async function updateCheckInStatus(guest) {
     }
 }
 
-// Show who else has checked in at the same table
+// Show who else has checked in at the same table using JSONP
 async function showTableStatus(tableNumber) {
     try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'getTableStatus',
-                table: tableNumber
-            })
+        const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
+            action: 'getTableStatus',
+            table: tableNumber
         });
-        
-        const result = await response.json();
         
         if (result.success && result.checkIns.length > 0) {
             const guestInfo = document.getElementById('guestInfo');
