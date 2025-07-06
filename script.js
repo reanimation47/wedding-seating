@@ -6,6 +6,9 @@ let autocompleteTimeout = null;
 let selectedSuggestionIndex = -1;
 let suggestions = [];
 
+// Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx90rk9-QnLWv6gBUO3VOT7sK9LO5oSp_K2-PZ2qlUqdZf91Wt5EEiHHU352ojZGNvV/exec';
+
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
@@ -120,7 +123,12 @@ function findGuest(searchName) {
     // First try exact match
     for (const [guestName, guestInfo] of Object.entries(guestData)) {
         if (guestName.toLowerCase() === normalizedSearch) {
-            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
+            return { 
+                name: guestName, 
+                id: guestInfo.id,
+                table: guestInfo.table, 
+                description: guestInfo.description 
+            };
         }
     }
     
@@ -128,7 +136,12 @@ function findGuest(searchName) {
     for (const [guestName, guestInfo] of Object.entries(guestData)) {
         if (guestName.toLowerCase().includes(normalizedSearch) || 
             normalizedSearch.includes(guestName.toLowerCase())) {
-            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
+            return { 
+                name: guestName, 
+                id: guestInfo.id,
+                table: guestInfo.table, 
+                description: guestInfo.description 
+            };
         }
     }
     
@@ -142,7 +155,12 @@ function findGuest(searchName) {
             )
         );
         if (hasMatch && searchWords.length > 0 && searchWords[0].length > 2) {
-            return { name: guestName, table: guestInfo.table, description: guestInfo.description };
+            return { 
+                name: guestName, 
+                id: guestInfo.id,
+                table: guestInfo.table, 
+                description: guestInfo.description 
+            };
         }
     }
     
@@ -304,35 +322,120 @@ function setTableHighlightIntensity(intensity) {
     console.log(`Table highlight intensity set to: ${intensity}`);
 }
 
-// Check in functionality
-function checkIn() {
+// Check in functionality with Google Sheets integration
+async function checkIn() {
     if (!currentGuest) return;
     
-    const checkInKey = `checkedIn_${currentGuest.name}`;
-    const checkInData = {
-        name: currentGuest.name,
-        table: currentGuest.table,
-        timestamp: new Date().toISOString(),
-        deviceId: getDeviceId()
-    };
+    const checkInBtn = document.getElementById('checkInBtn');
+    const originalText = checkInBtn.textContent;
     
-    // Store in localStorage
-    localStorage.setItem(checkInKey, JSON.stringify(checkInData));
+    // Show loading state
+    checkInBtn.innerHTML = '<span class="loading"></span> Đang check in...';
+    checkInBtn.disabled = true;
     
-    // Update UI
-    updateCheckInStatus(currentGuest);
+    try {
+        // Send check-in data to Google Sheets
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'checkin',
+                guestId: currentGuest.id,
+                guestName: currentGuest.name,
+                table: currentGuest.table,
+                deviceId: getDeviceId()
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Also store in localStorage as backup
+            const checkInData = {
+                id: currentGuest.id,
+                name: currentGuest.name,
+                table: currentGuest.table,
+                timestamp: new Date().toISOString(),
+                deviceId: getDeviceId()
+            };
+            localStorage.setItem(`checkedIn_${currentGuest.id}`, JSON.stringify(checkInData));
+            
+            // Update UI
+            await updateCheckInStatus(currentGuest);
+            
+            // Show success modal
+            showSuccessModal();
+        } else {
+            throw new Error(result.error || 'Check-in failed');
+        }
+    } catch (error) {
+        console.error('Check-in error:', error);
+        
+        // Fallback to localStorage only
+        const checkInData = {
+            id: currentGuest.id,
+            name: currentGuest.name,
+            table: currentGuest.table,
+            timestamp: new Date().toISOString(),
+            deviceId: getDeviceId()
+        };
+        localStorage.setItem(`checkedIn_${currentGuest.id}`, JSON.stringify(checkInData));
+        
+        // Update UI
+        await updateCheckInStatus(currentGuest);
+        
+        // Show success modal with warning
+        showSuccessModal();
+        console.warn('Check-in saved locally only due to network error');
+    }
     
-    // Show success modal
-    showSuccessModal();
+    // Reset button
+    checkInBtn.textContent = originalText;
 }
 
-// Update check-in status display
-function updateCheckInStatus(guest) {
-    const checkInKey = `checkedIn_${guest.name}`;
-    const checkInData = localStorage.getItem(checkInKey);
+// Update check-in status display with Google Sheets integration
+async function updateCheckInStatus(guest) {
     const checkInBtn = document.getElementById('checkInBtn');
     const checkInStatus = document.getElementById('checkInStatus');
     
+    try {
+        // First check Google Sheets
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'checkStatus',
+                guestId: guest.id
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.isCheckedIn) {
+            checkInBtn.textContent = 'Đã Check In';
+            checkInBtn.disabled = true;
+            
+            // Get table status to show other checked-in guests
+            await showTableStatus(guest.table);
+            
+            checkInStatus.innerHTML = `
+                <div class="already-checked">
+                    ✓ Quý khách đã check in thành công
+                </div>
+            `;
+            checkInStatus.className = 'check-in-status already-checked';
+            return;
+        }
+    } catch (error) {
+        console.error('Error checking status from Google Sheets:', error);
+    }
+    
+    // Fallback to localStorage check
+    const checkInData = localStorage.getItem(`checkedIn_${guest.id}`);
     if (checkInData) {
         const data = JSON.parse(checkInData);
         const checkInTime = new Date(data.timestamp).toLocaleString();
@@ -342,7 +445,7 @@ function updateCheckInStatus(guest) {
         
         checkInStatus.innerHTML = `
             <div class="already-checked">
-                ✓ Quý khách đã check in vào ${checkInTime}
+                ✓ Quý khách đã check in vào ${checkInTime} (offline)
             </div>
         `;
         checkInStatus.className = 'check-in-status already-checked';
@@ -351,6 +454,49 @@ function updateCheckInStatus(guest) {
         checkInBtn.disabled = false;
         checkInStatus.innerHTML = '';
         checkInStatus.className = 'check-in-status';
+        
+        // Show table status for current table
+        await showTableStatus(guest.table);
+    }
+}
+
+// Show who else has checked in at the same table
+async function showTableStatus(tableNumber) {
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'getTableStatus',
+                table: tableNumber
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.checkIns.length > 0) {
+            const guestInfo = document.getElementById('guestInfo');
+            const tableStatusHtml = `
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+                    <h4 style="margin: 0 0 10px 0; color: #2D5016;">Khách đã check-in tại bàn này:</h4>
+                    ${result.checkIns.map(checkin => `
+                        <div style="margin: 5px 0; color: #666;">
+                            ✅ ${checkin.guestName} 
+                            <small>(${new Date(checkin.timestamp).toLocaleTimeString()})</small>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Add table status to guest info
+            if (!guestInfo.innerHTML.includes('Khách đã check-in tại bàn này:')) {
+                guestInfo.innerHTML += tableStatusHtml;
+            }
+        }
+    } catch (error) {
+        console.error('Error getting table status:', error);
     }
 }
 
