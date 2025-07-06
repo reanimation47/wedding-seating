@@ -259,13 +259,13 @@ body {
 }
 
 .table.highlighted {
-    animation: bounceGlow var(--animation-duration) ease-in-out infinite;
+    animation: bounceColor var(--animation-duration) ease-in-out infinite;
 }
 
 .table.highlighted circle {
-    fill: var(--primary-green);
     stroke: var(--primary-green);
     stroke-width: 3;
+    animation: colorPulse var(--animation-duration) ease-in-out infinite;
 }
 
 .table text {
@@ -282,66 +282,61 @@ body {
     font-weight: 700;
 }
 
-/* Bouncing Glow Animation with Intensity Levels */
+/* Bouncing Color Animation with Intensity Levels */
 :root {
     /* Intensity control variables */
     --bounce-distance: 10px;
-    --glow-blur: 15px;
-    --glow-spread: 5px;
     --animation-duration: 2s;
-    --glow-opacity: 0.8;
+    --bright-green: #5B9A6B;
+    --base-green: #2D5016;
 }
 
 /* Intensity level classes */
 .table.highlighted.intensity-low {
     --bounce-distance: 6px;
-    --glow-blur: 10px;
-    --glow-spread: 3px;
     --animation-duration: 2.5s;
-    --glow-opacity: 0.6;
+    --bright-green: #4A7C59;
 }
 
 .table.highlighted.intensity-medium {
     --bounce-distance: 10px;
-    --glow-blur: 15px;
-    --glow-spread: 5px;
     --animation-duration: 2s;
-    --glow-opacity: 0.8;
+    --bright-green: #5B9A6B;
 }
 
 .table.highlighted.intensity-high {
     --bounce-distance: 15px;
-    --glow-blur: 20px;
-    --glow-spread: 8px;
     --animation-duration: 1.5s;
-    --glow-opacity: 1;
+    --bright-green: #6BAA7B;
 }
 
-@keyframes bounceGlow {
+@keyframes bounceColor {
     0% {
         transform: translateY(0);
-        filter: drop-shadow(0 0 var(--glow-blur) rgba(45, 80, 22, var(--glow-opacity)))
-                drop-shadow(0 0 calc(var(--glow-blur) * 0.5) rgba(255, 215, 0, 0.4));
     }
     25% {
         transform: translateY(calc(var(--bounce-distance) * -0.5));
-        filter: drop-shadow(0 var(--glow-spread) var(--glow-blur) rgba(45, 80, 22, var(--glow-opacity)))
-                drop-shadow(0 var(--glow-spread) calc(var(--glow-blur) * 0.5) rgba(255, 215, 0, 0.6));
     }
     50% {
         transform: translateY(calc(var(--bounce-distance) * -1));
-        filter: drop-shadow(0 calc(var(--glow-spread) * 2) calc(var(--glow-blur) * 1.2) rgba(45, 80, 22, var(--glow-opacity)))
-                drop-shadow(0 calc(var(--glow-spread) * 2) calc(var(--glow-blur) * 0.8) rgba(255, 215, 0, 0.8));
     }
     75% {
         transform: translateY(calc(var(--bounce-distance) * -0.5));
-        filter: drop-shadow(0 var(--glow-spread) var(--glow-blur) rgba(45, 80, 22, var(--glow-opacity)))
-                drop-shadow(0 var(--glow-spread) calc(var(--glow-blur) * 0.5) rgba(255, 215, 0, 0.6));
     }
     100% {
         transform: translateY(0);
-        filter: drop-shadow(0 0 var(--glow-blur) rgba(45, 80, 22, var(--glow-opacity)))
-                drop-shadow(0 0 calc(var(--glow-blur) * 0.5) rgba(255, 215, 0, 0.4));
+    }
+}
+
+@keyframes colorPulse {
+    0% {
+        fill: var(--base-green);
+    }
+    50% {
+        fill: var(--bright-green);
+    }
+    100% {
+        fill: var(--base-green);
     }
 }
 
