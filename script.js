@@ -488,16 +488,36 @@ async function updateCheckInStatus(guest) {
 
 // Show who else has checked in at the same table using JSONP
 async function showTableStatus(tableNumber) {
+    const guestInfo = document.getElementById('guestInfo');
+    
+    // Show loading indicator
+    const loadingHtml = `
+        <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6c757d;">
+            <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
+            <div style="display: flex; align-items: center; color: #666;">
+                <span class="loading" style="margin-right: 10px;"></span>
+                Đang tải danh sách khách...
+            </div>
+        </div>
+    `;
+    
+    // Add loading indicator if not already present
+    if (!guestInfo.innerHTML.includes('Tình trạng bàn:')) {
+        guestInfo.innerHTML += loadingHtml;
+    }
+    
     try {
         const result = await makeJSONPRequest(GOOGLE_SCRIPT_URL, {
             action: 'getTableStatus',
             table: tableNumber
         });
         
+        let tableStatusHtml;
+        
         if (result.success && result.checkIns.length > 0) {
-            const guestInfo = document.getElementById('guestInfo');
-            const tableStatusHtml = `
-                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+            // Show checked-in guests
+            tableStatusHtml = `
+                <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
                     <h4 style="margin: 0 0 10px 0; color: #2D5016;">Khách đã check-in tại bàn này:</h4>
                     ${result.checkIns.map(checkin => `
                         <div style="margin: 5px 0; color: #666;">
@@ -507,14 +527,45 @@ async function showTableStatus(tableNumber) {
                     `).join('')}
                 </div>
             `;
-            
-            // Add table status to guest info
-            if (!guestInfo.innerHTML.includes('Khách đã check-in tại bàn này:')) {
-                guestInfo.innerHTML += tableStatusHtml;
-            }
+        } else {
+            // Show empty state message
+            tableStatusHtml = `
+                <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
+                    <div style="color: #666; text-align: center; font-style: italic;">
+                        😔 Chưa có ai check-in tại bàn này
+                    </div>
+                </div>
+            `;
         }
+        
+        // Replace loading indicator with actual content
+        const existingContainer = document.getElementById('tableStatusContainer');
+        if (existingContainer) {
+            existingContainer.outerHTML = tableStatusHtml;
+        } else {
+            guestInfo.innerHTML += tableStatusHtml;
+        }
+        
     } catch (error) {
         console.error('Error getting table status:', error);
+        
+        // Show error state
+        const errorHtml = `
+            <div id="tableStatusContainer" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
+                <h4 style="margin: 0 0 10px 0; color: #2D5016;">Tình trạng bàn:</h4>
+                <div style="color: #dc3545; text-align: center; font-style: italic;">
+                    ⚠️ Không thể tải thông tin bàn (chế độ offline)
+                </div>
+            </div>
+        `;
+        
+        const existingContainer = document.getElementById('tableStatusContainer');
+        if (existingContainer) {
+            existingContainer.outerHTML = errorHtml;
+        } else {
+            guestInfo.innerHTML += errorHtml;
+        }
     }
 }
 
