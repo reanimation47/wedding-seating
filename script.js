@@ -270,6 +270,9 @@ function generateFloorPlan() {
     const floorPlan = document.getElementById('floorPlan');
     floorPlan.innerHTML = ''; // Clear existing content
     
+    // Set viewBox to match the reference layout
+    floorPlan.setAttribute('viewBox', '0 0 800 600');
+    
     // Add background elements
     addFloorPlanBackground(floorPlan);
     
@@ -281,51 +284,134 @@ function generateFloorPlan() {
 
 // Add background elements to floor plan
 function addFloorPlanBackground(svg) {
-    // Add stage/head table area
-    const stage = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    stage.setAttribute('x', '50');
-    stage.setAttribute('y', '50');
-    stage.setAttribute('width', '700');
-    stage.setAttribute('height', '80');
-    stage.setAttribute('fill', '#E8F5E8');
-    stage.setAttribute('stroke', '#4A7C59');
-    stage.setAttribute('stroke-width', '2');
-    stage.setAttribute('rx', '10');
-    svg.appendChild(stage);
+    // Add main background
+    const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    background.setAttribute('x', '0');
+    background.setAttribute('y', '0');
+    background.setAttribute('width', '800');
+    background.setAttribute('height', '600');
+    background.setAttribute('fill', '#F5F2E8');
+    background.setAttribute('stroke', '#C5D1B8');
+    background.setAttribute('stroke-width', '2');
+    svg.appendChild(background);
+    
+    // Add red pathways - vertical main pathway
+    const mainPathway = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    mainPathway.setAttribute('x', '390');
+    mainPathway.setAttribute('y', '200');
+    mainPathway.setAttribute('width', '30');
+    mainPathway.setAttribute('height', '280');
+    mainPathway.setAttribute('fill', '#DC3545');
+    mainPathway.setAttribute('opacity', '0.8');
+    svg.appendChild(mainPathway);
+    
+    // Add horizontal pathway
+    const horizontalPathway = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    horizontalPathway.setAttribute('x', '150');
+    horizontalPathway.setAttribute('y', '480');
+    horizontalPathway.setAttribute('width', '500');
+    horizontalPathway.setAttribute('height', '30');
+    horizontalPathway.setAttribute('fill', '#DC3545');
+    horizontalPathway.setAttribute('opacity', '0.8');
+    svg.appendChild(horizontalPathway);
+
+    // Add runway_1 pathway
+    const runway_1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    runway_1.setAttribute('x', '420');
+    runway_1.setAttribute('y', '290');
+    runway_1.setAttribute('width', '340');
+    runway_1.setAttribute('height', '30');
+    runway_1.setAttribute('fill', '#DC3545');
+    runway_1.setAttribute('opacity', '0.8');
+    svg.appendChild(runway_1);
+    
+    // Add stage area at bottom
+    const stageArea = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    stageArea.setAttribute('x', '300');
+    stageArea.setAttribute('y', '520');
+    stageArea.setAttribute('width', '200');
+    stageArea.setAttribute('height', '60');
+    stageArea.setAttribute('fill', '#D4B896');
+    stageArea.setAttribute('stroke', '#8B7355');
+    stageArea.setAttribute('stroke-width', '2');
+    stageArea.setAttribute('rx', '5');
+    svg.appendChild(stageArea);
     
     // Add stage label
     const stageLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     stageLabel.setAttribute('x', '400');
-    stageLabel.setAttribute('y', '95');
+    stageLabel.setAttribute('y', '545');
     stageLabel.setAttribute('text-anchor', 'middle');
-    stageLabel.setAttribute('font-family', 'Inter, sans-serif');
-    stageLabel.setAttribute('font-size', '16');
-    stageLabel.setAttribute('font-weight', '600');
-    stageLabel.setAttribute('fill', '#2D5016');
-    stageLabel.textContent = 'Bàn Chính / Sân Khấu';
+    stageLabel.setAttribute('font-family', 'Arial, sans-serif');
+    stageLabel.setAttribute('font-size', '14');
+    stageLabel.setAttribute('font-weight', 'bold');
+    stageLabel.setAttribute('fill', '#2D1810');
+    stageLabel.textContent = 'SÂN KHẤU';
     svg.appendChild(stageLabel);
     
-    // Add dance floor
-    const danceFloor = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    danceFloor.setAttribute('cx', '400');
-    danceFloor.setAttribute('cy', '350');
-    danceFloor.setAttribute('r', '80');
-    danceFloor.setAttribute('fill', '#F8F9FA');
-    danceFloor.setAttribute('stroke', '#DEE2E6');
-    danceFloor.setAttribute('stroke-width', '2');
-    danceFloor.setAttribute('stroke-dasharray', '5,5');
-    svg.appendChild(danceFloor);
+    // Add screen label below stage
+    const screenLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    screenLabel.setAttribute('x', '400');
+    screenLabel.setAttribute('y', '565');
+    screenLabel.setAttribute('text-anchor', 'middle');
+    screenLabel.setAttribute('font-family', 'Arial, sans-serif');
+    screenLabel.setAttribute('font-size', '10');
+    screenLabel.setAttribute('fill', '#2D1810');
+    screenLabel.textContent = 'Màn chiếu';
+    svg.appendChild(screenLabel);
     
-    // Add dance floor label
-    const danceLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    danceLabel.setAttribute('x', '400');
-    danceLabel.setAttribute('y', '355');
-    danceLabel.setAttribute('text-anchor', 'middle');
-    danceLabel.setAttribute('font-family', 'Inter, sans-serif');
-    danceLabel.setAttribute('font-size', '14');
-    danceLabel.setAttribute('fill', '#6C757D');
-    danceLabel.textContent = 'Sàn Nhảy';
-    svg.appendChild(danceLabel);
+    // // Add left door
+    // const leftDoor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    // leftDoor.setAttribute('x', '10');
+    // leftDoor.setAttribute('y', '280');
+    // leftDoor.setAttribute('width', '30');
+    // leftDoor.setAttribute('height', '80');
+    // leftDoor.setAttribute('fill', '#6C757D');
+    // leftDoor.setAttribute('stroke', '#495057');
+    // leftDoor.setAttribute('stroke-width', '2');
+    // svg.appendChild(leftDoor);
+    
+    // Add right door
+    const rightDoor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rightDoor.setAttribute('x', '760');
+    rightDoor.setAttribute('y', '265');
+    rightDoor.setAttribute('width', '30');
+    rightDoor.setAttribute('height', '80');
+    rightDoor.setAttribute('fill', '#6C757D');
+    rightDoor.setAttribute('stroke', '#495057');
+    rightDoor.setAttribute('stroke-width', '2');
+    svg.appendChild(rightDoor);
+    
+    // Add AT section (staff area)
+    const atSection = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    atSection.setAttribute('x', '50');
+    atSection.setAttribute('y', '520');
+    atSection.setAttribute('width', '60');
+    atSection.setAttribute('height', '40');
+    atSection.setAttribute('fill', '#4A90E2');
+    atSection.setAttribute('stroke', '#2E5C8A');
+    atSection.setAttribute('stroke-width', '2');
+    atSection.setAttribute('rx', '3');
+    svg.appendChild(atSection);
+    
+    // Add AT label
+    const atLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    atLabel.setAttribute('x', '80');
+    atLabel.setAttribute('y', '545');
+    atLabel.setAttribute('text-anchor', 'middle');
+    atLabel.setAttribute('font-family', 'Arial, sans-serif');
+    atLabel.setAttribute('font-size', '16');
+    atLabel.setAttribute('font-weight', 'bold');
+    atLabel.setAttribute('fill', 'white');
+    atLabel.textContent = 'AT';
+    svg.appendChild(atLabel);
+}
+
+// Convert grid position to SVG coordinates
+function gridToCoordinates(row, column, gridConfig) {
+    const x = gridConfig.startX + (column - 1) * gridConfig.cellWidth;
+    const y = gridConfig.startY + (row - 1) * gridConfig.cellHeight;
+    return { x, y };
 }
 
 // Add individual table to floor plan
@@ -334,16 +420,29 @@ function addTableToFloorPlan(svg, table) {
     tableGroup.setAttribute('class', 'table');
     tableGroup.setAttribute('data-table', table.number);
     
-    // Create table circle
+    // Calculate position using grid system
+    const gridConfig = tableData.gridConfig;
+    const position = gridToCoordinates(table.row, table.column, gridConfig);
+    
+    // Create table circle with consistent styling for all tables
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', table.x);
-    circle.setAttribute('cy', table.y);
-    circle.setAttribute('r', table.radius || 30);
+    circle.setAttribute('cx', position.x);
+    circle.setAttribute('cy', position.y);
+    circle.setAttribute('r', table.radius || gridConfig.tableRadius);
+    circle.setAttribute('fill', '#D4B896');
+    circle.setAttribute('stroke', '#8B7355');
+    circle.setAttribute('stroke-width', '2');
     
     // Create table label
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', table.x);
-    text.setAttribute('y', table.y);
+    text.setAttribute('x', position.x);
+    text.setAttribute('y', position.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.setAttribute('font-family', 'Arial, sans-serif');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-weight', 'bold');
+    text.setAttribute('fill', '#2D1810');
     text.textContent = table.number;
     
     tableGroup.appendChild(circle);
@@ -353,7 +452,7 @@ function addTableToFloorPlan(svg, table) {
     // Add click event for table interaction
     tableGroup.addEventListener('click', () => {
         // Optional: Add table click functionality
-        console.log(`Clicked on ${table.number}`);
+        console.log(`Clicked on table ${table.number} at grid position (${table.row}, ${table.column})`);
     });
 }
 

@@ -337,9 +337,10 @@ body::before {
 }
 
 .table circle {
-    fill: var(--soft-beige);
-    stroke: var(--primary-sage);
+    fill: #D4B896;
+    stroke: #8B7355;
     stroke-width: 2;
+    transition: var(--transition);
 }
 
 .table.highlighted {
@@ -353,17 +354,45 @@ body::before {
 }
 
 .table text {
-    fill: var(--text-dark);
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 14px;
+    fill: #2D1810;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 12px;
     text-anchor: middle;
     dominant-baseline: central;
+    pointer-events: none;
 }
 
 .table.highlighted text {
     fill: var(--cream);
     font-weight: 700;
+}
+
+/* Floor plan specific styling */
+.floor-plan {
+    background: #F5F2E8;
+    border: 2px solid #C5D1B8;
+}
+
+/* Stage and pathway elements */
+.stage-area {
+    fill: #D4B896;
+    stroke: #8B7355;
+}
+
+.pathway {
+    fill: #DC3545;
+    opacity: 0.8;
+}
+
+.door {
+    fill: #6C757D;
+    stroke: #495057;
+}
+
+.at-section {
+    fill: #4A90E2;
+    stroke: #2E5C8A;
 }
 
 /* Bouncing Color Animation with Intensity Levels */
