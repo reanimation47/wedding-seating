@@ -440,10 +440,10 @@ function addTableToFloorPlan(svg, table) {
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('dominant-baseline', 'central');
     text.setAttribute('font-family', 'Arial, sans-serif');
-    text.setAttribute('font-size', '12');
+    text.setAttribute('font-size', '30');
     text.setAttribute('font-weight', 'bold');
     text.setAttribute('fill', '#2D1810');
-    text.textContent = table.number;
+    text.textContent = +table.number;
     
     tableGroup.appendChild(circle);
     tableGroup.appendChild(text);

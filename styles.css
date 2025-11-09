@@ -357,7 +357,7 @@ body::before {
     fill: #2D1810;
     font-family: 'Arial', sans-serif;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 30px;
     text-anchor: middle;
     dominant-baseline: central;
     pointer-events: none;
