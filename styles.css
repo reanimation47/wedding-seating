@@ -337,8 +337,8 @@ body::before {
 }
 
 .table circle {
-    fill: #D4B896;
-    stroke: #8B7355;
+    fill: var(--soft-beige);
+    stroke: var(--primary-sage);
     stroke-width: 2;
     transition: var(--transition);
 }

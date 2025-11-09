@@ -418,7 +418,7 @@ function gridToCoordinates(row, column, gridConfig) {
 function addTableToFloorPlan(svg, table) {
     const tableGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     tableGroup.setAttribute('class', 'table');
-    tableGroup.setAttribute('data-table', table.number);
+    tableGroup.setAttribute('data-table', parseInt(table.number, 10));
     
     // Calculate position using grid system
     const gridConfig = tableData.gridConfig;
@@ -429,9 +429,6 @@ function addTableToFloorPlan(svg, table) {
     circle.setAttribute('cx', position.x);
     circle.setAttribute('cy', position.y);
     circle.setAttribute('r', table.radius || gridConfig.tableRadius);
-    circle.setAttribute('fill', '#D4B896');
-    circle.setAttribute('stroke', '#8B7355');
-    circle.setAttribute('stroke-width', '2');
     
     // Create table label
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -466,10 +463,15 @@ function highlightTable(tableNumber) {
         table.classList.remove('highlighted', 'intensity-low', 'intensity-medium', 'intensity-high');
     });
     
+    // Parse table number to ensure consistent matching
+    const parsedTableNumber = parseInt(tableNumber, 10);
+    
     // Add highlight to target table
-    const targetTable = document.querySelector(`[data-table="${tableNumber}"]`);
+    const targetTable = document.querySelector(`[data-table="${parsedTableNumber}"]`);
     if (targetTable) {
         targetTable.classList.add('highlighted', `intensity-${highlightIntensity}`);
+    } else {
+        console.warn(`Table ${tableNumber} (parsed as ${parsedTableNumber}) not found for highlighting`);
     }
 }
 
