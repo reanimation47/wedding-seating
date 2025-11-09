@@ -1,6 +1,15 @@
 /* Import elegant fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
 
+/* Local font declaration */
+@font-face {
+    font-family: 'Parfumerie Script Text';
+    src: url('assets/fonts/ParfumerieScriptText.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* CSS Variables for consistent theming */
 :root {
     --primary-sage: #6B7F5A;
@@ -84,8 +93,8 @@ body::before {
 }
 
 .header h1 {
-    font-family: 'Dancing Script', cursive;
-    font-size: 3.5rem;
+    font-family: 'Parfumerie Script Text', 'Dancing Script', cursive;
+    font-size: 6.75rem;
     font-weight: 600;
     color: var(--dark-sage);
     margin-bottom: 15px;
@@ -625,7 +634,7 @@ body::before {
     }
     
     .header h1 {
-        font-size: 2.5rem;
+        font-size: 5rem;
     }
     
     .header p {
@@ -675,7 +684,7 @@ body::before {
     }
     
     .header h1 {
-        font-size: 2rem;
+        font-size: 3.5rem;
     }
     
     .search-card h2, .floor-plan-card h2 {
