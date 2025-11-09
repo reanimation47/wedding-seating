@@ -1,19 +1,23 @@
 /* Import elegant fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
 
 /* CSS Variables for consistent theming */
 :root {
-    --primary-green: #2D5016;
-    --light-green: #E8F5E8;
-    --accent-green: #4A7C59;
-    --white: #FFFFFF;
-    --text-dark: #333333;
-    --text-light: #666666;
-    --border-light: #E0E0E0;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
-    --border-radius: 12px;
+    --primary-sage: #6B7F5A;
+    --dark-sage: #4A5D3A;
+    --light-sage: #A8B89A;
+    --cream: #F5F2E8;
+    --warm-cream: #F0EBD8;
+    --soft-beige: #E8E0D0;
+    --text-dark: #3A3A3A;
+    --text-medium: #5A5A5A;
+    --text-light: #7A7A7A;
+    --border-sage: #C5D1B8;
+    --shadow-soft: 0 4px 12px rgba(107, 127, 90, 0.15);
+    --shadow-elegant: 0 8px 25px rgba(107, 127, 90, 0.2);
+    --border-radius: 8px;
     --transition: all 0.3s ease;
+    --paper-texture: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F5F2E8' fill-opacity='0.03'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3Ccircle cx='53' cy='53' r='1'/%3E%3Ccircle cx='23' cy='43' r='1'/%3E%3Ccircle cx='37' cy='17' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Reset and base styles */
@@ -24,11 +28,12 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, var(--light-green) 0%, var(--white) 100%);
+    font-family: 'Cormorant Garamond', serif;
+    background: linear-gradient(135deg, var(--warm-cream) 0%, var(--cream) 100%);
+    background-image: var(--paper-texture);
     min-height: 100vh;
     color: var(--text-dark);
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .container {
@@ -45,32 +50,66 @@ body {
     text-align: center;
     margin-bottom: 40px;
     padding: 40px 20px;
+    position: relative;
+}
+
+.logo-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.wedding-logo {
+    max-width: 360px;
+    max-height: 360px;
+    width: auto;
+    height: auto;
+    transition: var(--transition);
+}
+
+.wedding-logo:hover {
+    transform: scale(1.05);
 }
 
 .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--primary-green);
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: var(--dark-sage);
+    margin-bottom: 15px;
 }
 
 .header p {
-    font-size: 1.2rem;
-    color: var(--text-light);
-    font-weight: 300;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--text-medium);
+    font-weight: 400;
+    font-style: italic;
 }
 
 /* Card styles */
 .search-card, .floor-plan-card {
-    background: var(--white);
+    background: var(--cream);
+    border: 2px solid var(--border-sage);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-soft);
     padding: 40px;
     margin: 0 auto;
     max-width: 600px;
     transition: var(--transition);
+    position: relative;
+}
+
+.search-card::before, .floor-plan-card::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 1px dotted var(--light-sage);
+    border-radius: 4px;
+    pointer-events: none;
 }
 
 .floor-plan-card {
@@ -78,13 +117,14 @@ body {
 }
 
 .search-card:hover, .floor-plan-card:hover {
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
+    transform: translateY(-2px);
 }
 
 .search-card h2, .floor-plan-card h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: var(--primary-green);
+    font-size: 2.2rem;
+    color: var(--dark-sage);
     text-align: center;
     margin-bottom: 30px;
 }
@@ -104,17 +144,19 @@ body {
 #guestName {
     width: 100%;
     padding: 15px 20px;
-    border: 2px solid var(--border-light);
+    border: 2px solid var(--border-sage);
     border-radius: var(--border-radius);
     font-size: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
     transition: var(--transition);
-    background: var(--white);
+    background: var(--cream);
 }
 
 #guestName:focus {
     outline: none;
-    border-color: var(--accent-green);
-    box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+    border-color: var(--primary-sage);
+    box-shadow: 0 0 0 3px rgba(107, 127, 90, 0.15);
+    background: var(--warm-cream);
 }
 
 /* Autocomplete dropdown styles */
@@ -123,11 +165,11 @@ body {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--white);
-    border: 2px solid var(--accent-green);
+    background: var(--cream);
+    border: 2px solid var(--primary-sage);
     border-top: none;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
     z-index: 1000;
     max-height: 200px;
     overflow-y: auto;
@@ -165,8 +207,8 @@ body {
 
 .autocomplete-item:hover,
 .autocomplete-item.highlighted {
-    background: var(--light-green);
-    color: var(--primary-green);
+    background: var(--soft-beige);
+    color: var(--dark-sage);
 }
 
 .autocomplete-item.highlighted {
@@ -184,16 +226,17 @@ body {
 }
 
 .autocomplete-item.highlighted .table-info {
-    color: var(--accent-green);
+    color: var(--primary-sage);
 }
 
 #searchBtn {
     padding: 15px 30px;
-    background: var(--primary-green);
-    color: var(--white);
-    border: none;
+    background: var(--dark-sage);
+    color: var(--cream);
+    border: 2px solid var(--dark-sage);
     border-radius: var(--border-radius);
     font-size: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
@@ -201,9 +244,10 @@ body {
 }
 
 #searchBtn:hover {
-    background: var(--accent-green);
+    background: var(--primary-sage);
+    border-color: var(--primary-sage);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
 }
 
 #searchBtn:active {
@@ -214,22 +258,38 @@ body {
 .guest-info {
     text-align: center;
     margin-bottom: 30px;
-    padding: 20px;
-    background: var(--light-green);
+    padding: 25px;
+    background: var(--soft-beige);
     border-radius: var(--border-radius);
-    border-left: 4px solid var(--primary-green);
+    border: 2px solid var(--border-sage);
+    border-left: 4px solid var(--dark-sage);
+    position: relative;
+}
+
+.guest-info::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px dotted var(--light-sage);
+    border-radius: 4px;
+    pointer-events: none;
 }
 
 .guest-info h3 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    color: var(--primary-green);
-    margin-bottom: 5px;
+    font-size: 1.6rem;
+    color: var(--dark-sage);
+    margin-bottom: 8px;
 }
 
 .guest-info p {
-    font-size: 1.1rem;
-    color: var(--text-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--text-medium);
+    font-style: italic;
 }
 
 /* Floor plan styles */
@@ -242,9 +302,10 @@ body {
     width: 100%;
     max-width: 800px;
     height: auto;
-    border: 2px solid var(--border-light);
+    border: 2px solid var(--border-sage);
     border-radius: var(--border-radius);
-    background: var(--white);
+    background: var(--cream);
+    box-shadow: var(--shadow-soft);
 }
 
 .table {
@@ -253,8 +314,8 @@ body {
 }
 
 .table circle {
-    fill: var(--light-green);
-    stroke: var(--accent-green);
+    fill: var(--soft-beige);
+    stroke: var(--primary-sage);
     stroke-width: 2;
 }
 
@@ -263,14 +324,14 @@ body {
 }
 
 .table.highlighted circle {
-    stroke: var(--primary-green);
+    stroke: var(--dark-sage);
     stroke-width: 3;
     animation: colorPulse var(--animation-duration) ease-in-out infinite;
 }
 
 .table text {
     fill: var(--text-dark);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     font-size: 14px;
     text-anchor: middle;
@@ -278,7 +339,7 @@ body {
 }
 
 .table.highlighted text {
-    fill: var(--white);
+    fill: var(--cream);
     font-weight: 700;
 }
 
@@ -350,43 +411,47 @@ body {
 
 .check-in-btn, .back-btn {
     padding: 15px 30px;
-    border: none;
+    border: 2px solid;
     border-radius: var(--border-radius);
     font-size: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .check-in-btn {
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--dark-sage);
+    color: var(--cream);
+    border-color: var(--dark-sage);
 }
 
 .check-in-btn:hover {
-    background: var(--accent-green);
+    background: var(--primary-sage);
+    border-color: var(--primary-sage);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
 }
 
 .check-in-btn:disabled {
     background: var(--text-light);
+    border-color: var(--text-light);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
 .back-btn {
-    background: var(--white);
-    color: var(--primary-green);
-    border: 2px solid var(--primary-green);
+    background: var(--cream);
+    color: var(--dark-sage);
+    border-color: var(--dark-sage);
 }
 
 .back-btn:hover {
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--dark-sage);
+    color: var(--cream);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
 }
 
 /* Check-in status */
@@ -399,9 +464,9 @@ body {
 }
 
 .check-in-status.success {
-    background: var(--light-green);
-    color: var(--primary-green);
-    border: 2px solid var(--accent-green);
+    background: var(--soft-beige);
+    color: var(--dark-sage);
+    border: 2px solid var(--primary-sage);
 }
 
 .check-in-status.already-checked {
@@ -424,15 +489,29 @@ body {
 }
 
 .modal-content {
-    background-color: var(--white);
+    background-color: var(--cream);
+    border: 2px solid var(--border-sage);
     margin: 15% auto;
     padding: 40px;
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 500px;
     text-align: center;
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
     animation: modalSlideIn 0.3s ease;
+    position: relative;
+}
+
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 1px dotted var(--light-sage);
+    border-radius: 4px;
+    pointer-events: none;
 }
 
 @keyframes modalSlideIn {
@@ -449,15 +528,16 @@ body {
 .modal-content h3 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
-    color: var(--primary-green);
+    color: var(--dark-sage);
     margin-bottom: 15px;
 }
 
 .modal-content p {
-    font-size: 1.1rem;
-    color: var(--text-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--text-medium);
     margin-bottom: 25px;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .close {
@@ -470,31 +550,66 @@ body {
 }
 
 .close:hover {
-    color: var(--primary-green);
+    color: var(--dark-sage);
 }
 
 .modal-btn {
-    background: var(--primary-green);
-    color: var(--white);
-    border: none;
+    background: var(--dark-sage);
+    color: var(--cream);
+    border: 2px solid var(--dark-sage);
     padding: 15px 30px;
     border-radius: var(--border-radius);
     font-size: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .modal-btn:hover {
-    background: var(--accent-green);
+    background: var(--primary-sage);
+    border-color: var(--primary-sage);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-elegant);
+}
+
+/* Floral decorative elements */
+.container::before {
+    content: '';
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 Q20 20 30 30 Q40 20 30 10 M30 30 Q20 40 30 50 Q40 40 30 30' fill='none' stroke='%23A8B89A' stroke-width='1.5' opacity='0.3'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.container::after {
+    content: '';
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 Q20 20 30 30 Q40 20 30 10 M30 30 Q20 40 30 50 Q40 40 30 30' fill='none' stroke='%23A8B89A' stroke-width='1.5' opacity='0.3'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+    transform: rotate(180deg);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
+    }
+    
+    .wedding-logo {
+        max-width: 300px;
+        max-height: 300px;
     }
     
     .header h1 {
@@ -528,12 +643,23 @@ body {
         margin: 20% auto;
         padding: 30px 20px;
     }
+    
+    .container::before,
+    .container::after {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 @media (max-width: 480px) {
     .header {
         padding: 20px 10px;
         margin-bottom: 20px;
+    }
+    
+    .wedding-logo {
+        max-width: 240px;
+        max-height: 240px;
     }
     
     .header h1 {
@@ -546,6 +672,11 @@ body {
     
     .floor-plan {
         border-radius: 8px;
+    }
+    
+    .container::before,
+    .container::after {
+        display: none;
     }
 }
 
