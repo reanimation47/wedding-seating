@@ -5,7 +5,7 @@
 @font-face {
     font-family: 'Parfumerie Script Text';
     src: url('assets/fonts/ParfumerieScriptText.otf') format('opentype');
-    font-weight: normal;
+    font-weight: lighter;
     font-style: normal;
     font-display: swap;
 }
@@ -81,8 +81,8 @@ body::before {
 }
 
 .wedding-logo {
-    max-width: 360px;
-    max-height: 360px;
+    max-width: 252px;
+    max-height: 252px;
     width: auto;
     height: auto;
     transition: var(--transition);
@@ -92,12 +92,14 @@ body::before {
     transform: scale(1.05);
 }
 
-.header h1 {
-    font-family: 'Parfumerie Script Text', 'Dancing Script', cursive;
-    font-size: 6.75rem;
-    font-weight: 600;
-    color: var(--dark-sage);
+/* Title image styling */
+.title-image {
+    max-width: 100%;
+    height: auto;
     margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header p {
@@ -629,12 +631,12 @@ body::before {
     }
     
     .wedding-logo {
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 210px;
+        max-height: 210px;
     }
     
-    .header h1 {
-        font-size: 5rem;
+    .title-image {
+        max-width: 90%;
     }
     
     .header p {
@@ -679,12 +681,12 @@ body::before {
     }
     
     .wedding-logo {
-        max-width: 240px;
-        max-height: 240px;
+        max-width: 168px;
+        max-height: 168px;
     }
     
-    .header h1 {
-        font-size: 3.5rem;
+    .title-image {
+        max-width: 95%;
     }
     
     .search-card h2, .floor-plan-card h2 {
