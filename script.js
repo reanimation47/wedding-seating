@@ -298,22 +298,22 @@ function addFloorPlanBackground(svg) {
     // Add red pathways - vertical main pathway
     const mainPathway = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     mainPathway.setAttribute('x', '390');
-    mainPathway.setAttribute('y', '200');
+    mainPathway.setAttribute('y', '290');
     mainPathway.setAttribute('width', '30');
-    mainPathway.setAttribute('height', '280');
+    mainPathway.setAttribute('height', '200');
     mainPathway.setAttribute('fill', '#DC3545');
     mainPathway.setAttribute('opacity', '0.8');
     svg.appendChild(mainPathway);
     
-    // Add horizontal pathway
-    const horizontalPathway = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    horizontalPathway.setAttribute('x', '150');
-    horizontalPathway.setAttribute('y', '480');
-    horizontalPathway.setAttribute('width', '500');
-    horizontalPathway.setAttribute('height', '30');
-    horizontalPathway.setAttribute('fill', '#DC3545');
-    horizontalPathway.setAttribute('opacity', '0.8');
-    svg.appendChild(horizontalPathway);
+    // // Add horizontal pathway
+    // const horizontalPathway = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    // horizontalPathway.setAttribute('x', '150');
+    // horizontalPathway.setAttribute('y', '480');
+    // horizontalPathway.setAttribute('width', '500');
+    // horizontalPathway.setAttribute('height', '30');
+    // horizontalPathway.setAttribute('fill', '#DC3545');
+    // horizontalPathway.setAttribute('opacity', '0.8');
+    // svg.appendChild(horizontalPathway);
 
     // Add runway_1 pathway
     const runway_1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -336,6 +336,18 @@ function addFloorPlanBackground(svg) {
     stageArea.setAttribute('stroke-width', '2');
     stageArea.setAttribute('rx', '5');
     svg.appendChild(stageArea);
+
+     // Add sub_stageArea area at bottom
+    const sub_stageArea = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    sub_stageArea.setAttribute('x', '380');
+    sub_stageArea.setAttribute('y', '460');
+    sub_stageArea.setAttribute('width', '50');
+    sub_stageArea.setAttribute('height', '60');
+    sub_stageArea.setAttribute('fill', '#D4B896');
+    sub_stageArea.setAttribute('stroke', '#8B7355');
+    sub_stageArea.setAttribute('stroke-width', '2');
+    sub_stageArea.setAttribute('rx', '5');
+    svg.appendChild(sub_stageArea);
     
     // Add stage label
     const stageLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -359,6 +371,28 @@ function addFloorPlanBackground(svg) {
     screenLabel.setAttribute('fill', '#2D1810');
     screenLabel.textContent = 'Màn chiếu';
     svg.appendChild(screenLabel);
+
+    // Add screen label on the left stage
+    const left_screenLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    left_screenLabel.setAttribute('x', '200');
+    left_screenLabel.setAttribute('y', '530');
+    left_screenLabel.setAttribute('text-anchor', 'middle');
+    left_screenLabel.setAttribute('font-family', 'Arial, sans-serif');
+    left_screenLabel.setAttribute('font-size', '15');
+    left_screenLabel.setAttribute('fill', '#2D1810');
+    left_screenLabel.textContent = 'Màn chiếu';
+    svg.appendChild(left_screenLabel);
+
+    // Add screen label on the right stage
+    const right_screenLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    right_screenLabel.setAttribute('x', '600');
+    right_screenLabel.setAttribute('y', '530');
+    right_screenLabel.setAttribute('text-anchor', 'middle');
+    right_screenLabel.setAttribute('font-family', 'Arial, sans-serif');
+    right_screenLabel.setAttribute('font-size', '15');
+    right_screenLabel.setAttribute('fill', '#2D1810');
+    right_screenLabel.textContent = 'Màn chiếu';
+    svg.appendChild(right_screenLabel);   
     
     // // Add left door
     // const leftDoor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
