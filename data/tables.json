@@ -151,20 +151,20 @@
     },
     {
       "number": "021",
-      "row": 1,
-      "column": 3,
-      "radius": 30,
-      "type": "regular"
-    },
-    {
-      "number": "022",
       "row": 2,
       "column": 4,
       "radius": 30,
       "type": "regular"
     },
     {
-      "number": "023",
+      "number": "022",
+      "row": 2,
+      "column": 5,
+      "radius": 30,
+      "type": "regular"
+    },
+    {
+      "number": "025",
       "row": 3,
       "column": 6,
       "radius": 30,

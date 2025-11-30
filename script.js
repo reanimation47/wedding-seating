@@ -168,7 +168,8 @@ function findGuest(searchName) {
             return { 
                 name: guestName, 
                 id: guestInfo.id,
-                table: guestInfo.table, 
+                table: guestInfo.table,
+                tables: guestInfo.tables, 
                 description: guestInfo.description 
             };
         }
@@ -181,7 +182,8 @@ function findGuest(searchName) {
             return { 
                 name: guestName, 
                 id: guestInfo.id,
-                table: guestInfo.table, 
+                table: guestInfo.table,
+                tables: guestInfo.tables, 
                 description: guestInfo.description 
             };
         }
@@ -200,7 +202,8 @@ function findGuest(searchName) {
             return { 
                 name: guestName, 
                 id: guestInfo.id,
-                table: guestInfo.table, 
+                table: guestInfo.table,
+                tables: guestInfo.tables, 
                 description: guestInfo.description 
             };
         }
@@ -211,25 +214,37 @@ function findGuest(searchName) {
 
 // Show floor plan with highlighted table
 function showFloorPlan(guest) {
-    // Update guest info
+    // Update guest info based on single or multiple table assignment
     const guestInfo = document.getElementById('guestInfo');
-    guestInfo.innerHTML = `
-        <h3>${guest.name}</h3>
-        <p>Quý khách ngồi tại <strong>Bàn ${guest.table}</strong></p>
-    `;
+    
+    if (guest.tables && guest.tables.length > 1) {
+        // Multiple table options
+        const tableList = guest.tables.map(table => `<strong>Bàn ${table}</strong>`).join(', ');
+        guestInfo.innerHTML = `
+            <h3>${guest.name}</h3>
+            <p>Quý khách có thể ngồi tại: ${tableList}</p>
+            <p style="color: #666; font-size: 14px; margin-top: 5px;">Quý khách có thể chọn bất kỳ bàn nào trong số các bàn được tô sáng</p>
+        `;
+    } else {
+        // Single table assignment (backward compatibility)
+        const tableNumber = guest.table || (guest.tables && guest.tables[0]);
+        guestInfo.innerHTML = `
+            <h3>${guest.name}</h3>
+            <p>Quý khách ngồi tại <strong>Bàn ${tableNumber}</strong></p>
+        `;
+    }
     
     // Hide search section and show floor plan
     document.getElementById('searchSection').style.display = 'none';
     document.getElementById('floorPlanSection').style.display = 'block';
     
-    // Highlight the guest's table
-    highlightTable(guest.table);
-    
-    // Show immediate loading states
-    showInitialLoadingStates(guest);
-    
-    // Load both check-in status and table status with a single API call
-    loadGuestAndTableStatus(guest);
+    // Highlight the guest's table(s)
+    if (guest.tables && guest.tables.length > 1) {
+        highlightMultipleTables(guest.tables);
+    } else {
+        const tableNumber = guest.table || (guest.tables && guest.tables[0]);
+        highlightTable(tableNumber);
+    }
     
     // Scroll to floor plan
     document.getElementById('floorPlanSection').scrollIntoView({ 
@@ -494,7 +509,7 @@ let highlightIntensity = 'high'; // Default to medium intensity
 function highlightTable(tableNumber) {
     // Remove existing highlights
     document.querySelectorAll('.table').forEach(table => {
-        table.classList.remove('highlighted', 'intensity-low', 'intensity-medium', 'intensity-high');
+        table.classList.remove('highlighted', 'multiple-option', 'intensity-low', 'intensity-medium', 'intensity-high');
     });
     
     // Parse table number to ensure consistent matching
@@ -507,6 +522,25 @@ function highlightTable(tableNumber) {
     } else {
         console.warn(`Table ${tableNumber} (parsed as ${parsedTableNumber}) not found for highlighting`);
     }
+}
+
+// Highlight multiple tables for guests with multiple options
+function highlightMultipleTables(tableNumbers) {
+    // Remove existing highlights
+    document.querySelectorAll('.table').forEach(table => {
+        table.classList.remove('highlighted', 'multiple-option', 'intensity-low', 'intensity-medium', 'intensity-high');
+    });
+    
+    // Highlight all tables in the array
+    tableNumbers.forEach(tableNumber => {
+        const parsedTableNumber = parseInt(tableNumber, 10);
+        const targetTable = document.querySelector(`[data-table="${parsedTableNumber}"]`);
+        if (targetTable) {
+            targetTable.classList.add('multiple-option', `intensity-${highlightIntensity}`);
+        } else {
+            console.warn(`Table ${tableNumber} (parsed as ${parsedTableNumber}) not found for highlighting`);
+        }
+    });
 }
 
 // Function to set table highlight intensity
